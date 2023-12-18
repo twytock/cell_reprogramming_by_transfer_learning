@@ -1,0 +1,23 @@
+name: reprog_design
+channels:
+  - ibmdecisionoptimization
+  - bioconda
+  - conda-forge
+dependencies:
+  - beautifulsoup4
+  - cplex
+  - fuzzywuzzy
+  - ipython
+  - jupyter
+  - jupyterlab
+  - matplotlib
+  - networkx
+  - numpy
+  - openpyxl
+  - pandas
+  - patsy
+  - python=3.9
+  - scikit-learn
+  - scipy
+  - scoop
+  - statsmodels
