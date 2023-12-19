@@ -54,7 +54,7 @@ def download_data(data_name):
                 with tarfile.open(file_path,'r:gz') as tfh:
                     head,tail = osp.split(file_path)
                     tpath = tail.split('.tar.gz')[0]
-                    tfh.extractall(path=osp.join(head,tpath))
+                    tfh.extractall(path=head)
             
 
 def main():
