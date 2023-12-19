@@ -8,6 +8,9 @@ The scripts rely upon the system requirements mentioned in the README file locat
 ## `DataDownloader.py`
 
 This script downloads the source data necessary for obtaining the results and saves it to `data/RNASeq` and `data/GeneExp`.
+Data may be downloaded using the command
+
+`python code/DataDownloader.py`
 
 # Comparison with annotation-based methods
 ## `naive_v_opt_final.py`

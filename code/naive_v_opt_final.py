@@ -20,8 +20,8 @@ import cplex
 
 
 index_gsym = pd.read_table('data/GeneExp/gpl570_entrezg_rowmap.txt',index_col=0) # inclulded
-deltas = pd.read_csv('data/GeneExp/fig2_sel_deltas.csv.gz',index_col=0)
-colkw_gn_ser = pd.read_pickle('data/GeneExp/fig2_sel_pert2gn_ser.csv',index_col=0).iloc[:,0]
+deltas = pd.read_csv('data/GeneExp/fig2_sel_deltas.csv.gz',index_col=[0,1])
+colkw_gn_ser = pd.read_csv('data/GeneExp/fig2_sel_pert2gn_ser.csv',index_col=0).iloc[:,0]
 
 ## need to select data as in forward selection
 
@@ -391,8 +391,8 @@ def ctpair_opt(cti,ctf,ch,nGene):
     al_df : pandas DataFrame, contains the amounts that each gene needs to be perturbed
 
     """
-    init = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.pkl')
-    ctf_df = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.pkl')
+    init = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.csv.gz',index_col=[0,1])
+    ctf_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.csv.gz',index_col=[0,1])
     targ = ctf_df.mean()    
     dcols = deltas.columns
     kw = f'{cti}-{ctf}'
@@ -433,8 +433,8 @@ def calc_dists(p,cti,ctf):
     df : pandas DataFrame, final distance to the target after applying perturbation p
     
     """
-    cti_df = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.pkl')
-    ctf_df = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.pkl')
+    cti_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.csv.gz')
+    ctf_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.csv.gz')
     ctf_mu = ctf_df.mean()
     if len(p.index.names)<2:
         p.index.names=['GSM']
@@ -544,8 +544,8 @@ def naive_opt_single_gene(naive_u,cti,ctf):
     opt_vals_df : pandas DataFrame, statistics for the genes selected and differences in the naive method
     
 """
-    cti_df = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.pkl')
-    ctf_df = pd.read_pickle(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.pkl')
+    cti_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.csv.gz',index_col=[0,1])
+    ctf_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.csv.gz',index_col=[0,1])
     ctf_mu = ctf_df.mean()
     if len(naive_u.index.names)<2:
         naive_u.index.names=['GSM']
