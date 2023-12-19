@@ -6,8 +6,6 @@ import gdown
 GeneExp_url_dict = {
     'GSM_to_CellType_final.csv':'https://drive.google.com/uc?id=16NJyRJ8ECp6ddSfbJKF7T1Q61pUxXL4o',
     'KNNGP2NM_ser.csv':'https://drive.google.com/uc?id=1N9iCloIUXPohEaIV9uDRBGCvTL66h-zs',
-    'ReprogrammingExperiments.xlsx':'https://drive.google.com/uc?id=1huDdLKPz6NZycf1LmnKlmznx0q5hj1ba',
-    'all_genexp_data.xlsx':'https://drive.google.com/uc?id=1hoxZYx4UeO5BTNB4c7pcCSTCcEwzhVEH',
     'cell_type_phenotype.csv':'https://drive.google.com/uc?id=1DO5r_cw5GmskWP_LJpY2WzS-YJM35evC',
     'delta_corr_newnci60-2.csv.gz':'https://drive.google.com/uc?id=1CObJRy2jVTZ8jHhGTOXZSMk0fyDRR_A6',
     'delta_corr_newnci60.csv.gz':'https://drive.google.com/uc?id=1j567jwnvU42mmdNPC8Vn_M_1SKD4EJWM',
@@ -21,7 +19,6 @@ GeneExp_url_dict = {
     "non_rpg_delt_columns.txt":'https://drive.google.com/uc?id=11JZFvNQkSLYlf3cLsIGQmeSnaRDHTgQf',
     "nonseq_bc_corr_data_all.csv":'https://drive.google.com/uc?id=1EpH64xySRxhVbh_qE8GxkfKPV6zfIoyH',
     "pert2gn_ser.csv":'https://drive.google.com/uc?id=1tUludA9zMBGC-Tep1spAGwG6QH1L3uep',
-    "perturbation_metadata.xlsx":'https://docs.google.com/spreadshuc?id=1xLxxOTNy75qSYMMXXYALTw6-penQO8fH',
     "probe_gsym_mapping.csv":'https://drive.google.com/uc?id=1uBr5ZaxzR8C74j4ZzWbnFlfnZDDCbCIl',
     "reprog_deltas_columns.txt":'https://drive.google.com/uc?id=1_foOg7Uy8tmwB28esTpjXEwKJampXNXx',
     "tissue_feat_l_WC_all.txt":'https://drive.google.com/uc?id=1XSRD6-AwgvDCWYfsgjNHFRe2o5phh8s1',
@@ -50,7 +47,7 @@ def download_data(data_name):
         file_path = osp.join(data_path,fn)
         if not os.path.exists(file_path):
             gdown.download(file_url, file_path, quiet=False)
-            if file_path.endswith('tar.gz'):
+            if file_path.endswith('tar.gz'):                
                 with tarfile.open(file_path,'r:gz') as tfh:
                     tfh.extractall()
                 os.remove(file_path)
