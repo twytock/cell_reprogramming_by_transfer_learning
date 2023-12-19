@@ -570,10 +570,7 @@ def rescue(cti,ctf,ch,nGene):
     """Calculate the naive and optimal results for all (cti,ctf) pairs.
     
     
-    """
-    if not osp.exists(f'output/naive_v_opt/{ch}/'):
-        os.makedirs(f'output/naive_v_opt/{ch}/')
-        
+    """        
     if nGene < 0:
         OUT_FN = f'output/naive_v_opt/{ch}/{cti}-{ctf}.pkl'
     elif nGene ==1:
@@ -760,6 +757,8 @@ def main():
     t_i = time.time()
     for ng in [1,-1]:
         for CH in ['A','I','E']:
+            if not osp.exists(f'output/naive_v_opt/{ch}/'):
+                os.makedirs(f'output/naive_v_opt/{ch}/')
             resc_red = partial(rescue,ch=CH,nGene=ng)
             all_list = [elt for elt in zip(*perms(cts,2))] ## can limit the length of "elt" to speed computation
             L = list(futures.map(resc_red,*all_list)) ## this step will generate parallel processes
