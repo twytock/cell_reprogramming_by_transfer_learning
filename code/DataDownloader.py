@@ -52,9 +52,8 @@ def download_data(data_name):
             gdown.download(file_url, file_path, quiet=False)
             if file_path.endswith('tar.gz'):
                 with tarfile.open(file_path,'r:gz') as tfh:
-                    head,tail = osp.split(file_path)
-                    tpath = tail.split('.tar.gz')[0]
-                    tfh.extractall(path=head)
+                    tfh.extractall()
+                os.remove(file_path)
             
 
 def main():
