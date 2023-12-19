@@ -54,7 +54,7 @@ which computes the optimal gene perturbations for each case using Mixed-Integer 
 The shell script takes two positional arguments. 
 
 1. Dataset to operate on, valid values: \{ `RNASeq`, `GeneExp` \}.
-2. Constraints on the control inputs $u_\ell$, valid values: \{`A`, `I`, `E`\}. These values correspond to the constraints $-\infty$<$u_{\ell}$<$\infty$, $|u_\ell|\leq1$, and $0\leq u_ell \leq 1$, respectively.
+2. Constraints on the control inputs $u_\ell$, valid values: \{`A`, `I`, `E`\}. These values correspond to the constraints $-\infty < u_{\ell} < \infty$, $| u_{\ell} |\leq1$, and $0\leq u_{ell} \leq 1$, respectively.
 
 The script may be invoked, for example:
 
