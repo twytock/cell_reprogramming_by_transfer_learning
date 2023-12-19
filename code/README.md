@@ -28,16 +28,14 @@ panels of Fig. 2 and Fig. S1 in the `output/fig2/` directory.
 
 # Validation against previous reprogramming experiments
 
-## `reprog_validation_final.py`
+## `reprog_vaildation.sh`
 
-This script calculates the reprogramming transitions to pluripotent states, and it takes a positional argument
-(valid values: \{`A`, `I`, `E`\}), that indicates the constraints on the control inputs.
+This script runs `reprog_validation_final.py` for each of the constraint conditions, \{`A`, `I`, `E`\}, on the control inputs.
 It may be called using 
 
-`python -m scoop -n 8 code/reprog_validation_final.py E`
+`./code/reprog_vaildation.sh`
 
-where 8 is the number of processors desired, and E corresponds to the $0\leq u_ell \leq 1$ constraint condition.
-The files are saved in `output/FS_GeneExp/`.
+Files are saved in `output/FS_GeneExp/`.
 
 ## `fig3_roc_auc.py`
 
