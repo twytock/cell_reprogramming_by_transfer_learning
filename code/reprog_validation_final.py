@@ -27,7 +27,7 @@ dmode = 'GeneExp'
 IN = f'data/{dmode}'
 OUT = 'output'
 
-annot = pd.read_excel(f'{IN}/ReprogrammingExperiments.xlsx' , index_col = 0, header=0)
+annot = pd.read_excel(f'{IN}/ReprogrammingExperiments.xlsx', index_col = 0, header=0)
 reprog_gse_arr = annot.GSE.unique()
 
 annot2 = pd.read_excel(f'{IN}/all_genexp_data.xlsx' ,index_col=0)
@@ -39,7 +39,6 @@ with open(osp.join(f'{IN}',f'{FEAT_FN}'),'r') as fh:
         feat_l = feat_l[:4]
 
 
-feat_l = pd.read_pickle(f'{IN}/{FEAT_FN}')[:4]
 corr_data_bc = corr_data_bc.loc[:,feat_l]
 unpert = pd.read_csv(f'{IN}/unpert_ct_inds.csv',index_col=0)
 unpert = pd.MultiIndex.from_frame(unpert).droplevel(0)
@@ -366,7 +365,7 @@ def test_reprog(gse):
     for K1,K2 in icombs(data_d.keys(),2):
         if not K1.startswith('nc') and not K2.startswith('nc'):
             continue
-#         elif osp.exists('%s/%s/FS/%s_%s-%s_%s-WC.pkl' % (PRJ,OUT,gse,K1,K2,ch)):
+#         elif osp.exists('%s/%s/FS/%s_%s-%s_%s.pkl' % (PRJ,OUT,gse,K1,K2,ch)):
 #             continue
         if K1.startswith('nc'):
             S = data_d[K1]
@@ -398,12 +397,10 @@ def test_reprog(gse):
         #    if comp_df.shape[0] > 1:
         #        df_l.append(comp_df)
         DF = pd.concat(df_l)
-        if not osp.exists(f'{OUT}/FS_GeneExp'):
-            os.makedirs(f'{OUT}/FS_GeneExp')
-        DF.to_pickle(f'{OUT}/FS_GeneExp/{gse}_{K1}-{K2}_{CH}-WC.pkl')
-#         if INTERMED:
-#             print("Cleaning intermediate files.")
-#             map(os.remove,glob('%s/*.pkl' % (tmpdir)))
+        if not osp.exists(osp.join(OUT,'FS_GeneExp')):
+            os.makedirs(osp.join(OUT,'FS_GeneExp'))
+        
+        DF.to_pickle(osp.join(OUT,'FS_GeneExp',f'{gse}_{K1}-{K2}_{CH}.pkl'))
     return 0
 
         
@@ -546,13 +543,6 @@ def forward_selection(S_T,sel_cols,deltas,model,WT,ctf,ibasin,tbasin,IM=False,N=
         DF = pd.DataFrame(red_ser_d).T
         DF.index.name='NG'; DF=DF.reset_index()
     cti = corr_data_bc.xs(gsmi,level='GSM').index[0]
-#     tmpdir = '%s/%s/%s_%s' % (PRJ,OUT,cti,ctf)
-#     if not osp.exists(tmpdir):
-#         os.mkdir(tmpdir)
-#     if N!=1:
-#         DF.to_pickle('%s/%s-%s_%s.pkl' % (tmpdir,gsmi,gsmf,ch))
-#     else:
-#         DF.to_pickle('%s/%s-%s-1_%s.pkl' % (tmpdir,gsmi,gsmf,ch))
     return S.name,T.name,DF    
 
 def updated_recw_calc_fs(kw,dcols,S,T,deltas,W,opt):
@@ -676,15 +666,12 @@ def main():
 
 def main2(CTI_CTF,tmpdir):
     CTI,CTF = CTI_CTF
-    ## need to write reprogramming   
-#     if not osp.exists(tmpdir):
-#         os.mkdir(tmpdir)
-    OPFN = f'{OUT}/{tmpdir}/{CTI}-{CTF}.pkl'
+    OPFN = osp.join(OUT,tmpdir,f'{CTI}-{CTF}.pkl') 
     if osp.exists(OPFN) or CTI==CTF:
         return 0
     if not osp.exists(osp.join(OUT,tmpdir)):
         os.makedirs(osp.join(OUT,tmpdir))
-    print(CTI,CTF) ## this does not work because of the KNN model.
+    print(CTI,CTF) 
     t_basin=idx.get_indexer([CTF])[0]
     i_basin=idx.get_indexer([CTI])[0]
     part_fs = partial(forward_selection, sel_cols=[], 
@@ -699,8 +686,8 @@ def main2(CTI_CTF,tmpdir):
     return 0
 
 def clean_one_gene_valid():
-    inp_dir = f'{OUT}/one_gene_valid/{CH}'
-    for fn in glob(f'{inp_dir}/*.pkl'):
+    inp_dir = osp.join(OUT,'one_gene_valid',CH)
+    for fn in glob(osp.join(inp_dir,'*.pkl')):
         ctp = fn.split('/')[-1].split('.pkl')[0]
         CTI,CTF = ctp.split('-')
         t_basin=idx.get_indexer([CTF])[0]
@@ -712,7 +699,7 @@ def clean_one_gene_valid():
             S.columns = [f'{col}_mu', f'{col}_sig']
             S_l.append(S)
         gene_pert_stats = pd.concat(S_l,axis=1)
-        gene_pert_stats.to_pickle(f'{inp_dir}/{ctp}_pert_stats.pkl')
+        gene_pert_stats.to_pickle(osp.join(inp_dir,f'{ctp}_pert_stats.pkl'))
         gene_finct_stats = defaultdict(dict)
         ii=0
         for pert,grp in test.KNN_GP.groupby(level='pert'):
@@ -724,16 +711,16 @@ def clean_one_gene_valid():
                 gene_finct_stats[ii]['INIT']=i_basin
                 ii+=1
         gene_finct_stats_df = pd.DataFrame(dict(gene_finct_stats)).T
-        gene_finct_stats_df.to_pickle(f'{inp_dir}/{ctp}_finct_stats.pkl')
+        gene_finct_stats_df.to_pickle(osp.join(inp_dir,f'{ctp}_finct_stats.pkl'))
         os.remove(fn)
     return 0 
 
 if __name__ == '__main__':
     ## this does the REPROGRAMMING COMPARISON -- need to uncomment
-    #main()
+    main()
     ## this does the TISSUE COMPARISON
     if CH=='A':
-        tmpdir = f'one_gene_valid/{CH}'
+        tmpdir = osp.join('one_gene_valid',CH)
         part_main = partial(main2,tmpdir=tmpdir)
         opl = list(futures.map(part_main,iprod(ovrlap_tissues,ovrlap_tissues)))
         clean_one_gene_valid()

@@ -30,13 +30,23 @@ panels of Fig. 2 and Fig. S1 in the `output/fig2/` directory.
 
 ## `reprog_validation_final.py`
 
-This script calculates the reprogramming transitions to pluripotent states.
+This script calculates the reprogramming transitions to pluripotent states, and it takes a positional argument
+(valid values: \{`A`, `I`, `E`\}), that indicates the constraints on the control inputs.
+It may be called using 
+
+`python -m scoop -n 8 code/reprog_validation_final.py E`
+
+where 8 is the number of processors desired, and E corresponds to the $0\leq u_ell \leq 1$ constraint condition.
 The files are saved in `output/FS_GeneExp/`.
 
 ## `fig3_roc_auc.py`
 
 This script produces Fig. 3 of the main text and Fig. S2 of the SI.
+It may be called using
 
+`python code/fig3_roc_auc.py`
+
+The figures will be generated in the directories `output/figS2` and `output/fig3`.
 
 # Computing and analyzing transdifferentiation transitions
 ## `fs.sh`
@@ -46,7 +56,7 @@ which computes the optimal gene perturbations for each case using Mixed-Integer 
 The shell script takes two positional arguments. 
 
 1. Dataset to operate on, valid values: \{ `RNASeq`, `GeneExp` \}.
-2. Constraints on the control inputs $u_\ell$, valid values: \{`A`, `I`, `E`\}. These values correspond to the constraints $-\infty<u_\ell<\infty$, $|u_\ell|\leq1$, and $0\leq u_ell \leq 1$, respectively.
+2. Constraints on the control inputs $u_\ell$, valid values: \{`A`, `I`, `E`\}. These values correspond to the constraints $-\infty$<$u_{\ell}$<$\infty$, $|u_\ell|\leq1$, and $0\leq u_ell \leq 1$, respectively.
 
 The script may be invoked, for example:
 

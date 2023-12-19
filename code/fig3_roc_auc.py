@@ -8,7 +8,7 @@ Created by Thomas Wytock on 2023-11-01.
 
 import time,sys,os
 from glob import glob
-import os.path as osp, pickle as PP, numpy as np
+import os.path as osp, numpy as np
 import matplotlib as mpl, matplotlib.pyplot as plt
 import pandas as pd
 from collections import defaultdict
@@ -72,12 +72,12 @@ def plot_auc_figure():
             clr = 'C2'
         elif alg=='E':
             clr = 'C0'
-        for fn in glob(f'output/FS_GeneExp/GSE*_{alg}-WC.pkl'):
+        for fn in glob(f'output/FS_GeneExp/GSE*_{alg}.pkl'):
             tst = pd.read_pickle(fn)
             if not 'pert' in tst.columns:
                 print(fn,"corrupted")
                 continue
-            #tst = pd.read_pickle('GeneExp/Output/FS/GSE12390_nc,foreskin_fibroblast-oe,iPS_A-WC.pkl')
+            #tst = pd.read_pickle('GeneExp/Output/FS/GSE12390_nc,foreskin_fibroblast-oe,iPS_A.pkl')
             avg = tst.set_index(['GSMi','GSMf']).groupby('pert').mean().sort_values('pf',ascending=False)
             try:
                 TFavg = pmeta.loc[avg.index,'Type']=='RPG'
@@ -88,7 +88,7 @@ def plot_auc_figure():
             esttpr = np.interp(base_fpr,fpr,tpr)
             roc_auc = auc(fpr, tpr)
             tprs_l.append(esttpr)
-            lbl = fn.split('/')[-1].split(f'{alg}-WC')[0]
+            lbl = fn.split('/')[-1].split(f'{alg}.pkl')[0]
             roc_auc_d[(alg,lbl)]=roc_auc
     
         MU = np.median(np.c_[tprs_l],axis=0)
