@@ -757,8 +757,8 @@ def main():
     t_i = time.time()
     for ng in [1,-1]:
         for CH in ['A','I','E']:
-            if not osp.exists(f'output/naive_v_opt/{ch}/'):
-                os.makedirs(f'output/naive_v_opt/{ch}/')
+            if not osp.exists(f'output/naive_v_opt/{CH}/'):
+                os.makedirs(f'output/naive_v_opt/{CH}/')
             resc_red = partial(rescue,ch=CH,nGene=ng)
             all_list = [elt for elt in zip(*perms(cts,2))] ## can limit the length of "elt" to speed computation
             L = list(futures.map(resc_red,*all_list)) ## this step will generate parallel processes
