@@ -6,6 +6,7 @@ channels:
 dependencies:
   - beautifulsoup4
   - cplex
+  - gdown
   - fuzzywuzzy
   - ipython
   - jupyter

@@ -1,7 +1,7 @@
 import os
 import os.path as osp
 import tarfile
-import urllib.request
+import gdown
 
 GeneExp_url_dict = {
     "GSM_to_CellType_final.csv":"https://drive.google.com/file/d/16NJyRJ8ECp6ddSfbJKF7T1Q61pUxXL4o/view?usp=share_link",
@@ -49,8 +49,7 @@ def download_data(data_name):
     for fn,file_url in url_dict.items():
         file_path = osp.join(data_path,fn)
         if not os.path.exists(file_path):
-            urllib.request.urlretrieve(file_url,file_path)
-            print(f"{fn} data has been downloaded and saved in {file_path}")
+            gdown.download(file_url, file_path, quiet=False)
             if file_path.endswith('tar.gz'):
                 with tarfile.open(file_path,'r:gz') as tfh:
                     head,tail = osp.split(file_path)

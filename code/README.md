@@ -5,7 +5,7 @@ the paths to the `data/` and `output/` directories will be correct.
 The scripts rely upon the system requirements mentioned in the README file located at the top-level directory of this respository.
 
 # Obtaining data
-## `download_data.py`
+## `DataDownloader.py`
 
 This script downloads the source data necessary for obtaining the results and saves it to `data/RNASeq` and `data/GeneExp`.
 
