@@ -20,7 +20,7 @@ import cplex
 
 
 index_gsym = pd.read_table('data/GeneExp/gpl570_entrezg_rowmap.txt',index_col=0) # inclulded
-deltas = pd.read_csv('data/GeneExp/fig2_sel_deltas.csv.gz',index_col=[0,1])
+deltas = pd.read_csv('data/GeneExp/fig2_sel_deltas.csv.gz',index_col=0)
 colkw_gn_ser = pd.read_csv('data/GeneExp/fig2_sel_pert2gn_ser.csv',index_col=0).iloc[:,0]
 
 ## need to select data as in forward selection
