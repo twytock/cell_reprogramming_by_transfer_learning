@@ -575,9 +575,9 @@ def rescue(cti,ctf,ch,nGene):
         OUT_FN = f'output/naive_v_opt/{ch}/{cti}-{ctf}.pkl'
     elif nGene ==1:
         OUT_FN = f'output/naive_v_opt/{ch}/{cti}-{ctf}_{nGene:d}.pkl'
-        if osp.exists(OUT_FN):
-            print(OUT_FN,'already completed.')
-            return 1
+    if osp.exists(OUT_FN):
+        print(OUT_FN,'already completed.')
+        return 1
     naive_al,naive_rsc = ctpair_naive_new(cti,ctf)
     d1,pf,opt_al = ctpair_opt(cti,ctf,ch,nGene)
     if ch == 'I':
