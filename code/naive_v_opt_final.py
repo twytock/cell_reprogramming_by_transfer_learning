@@ -433,8 +433,8 @@ def calc_dists(p,cti,ctf):
     df : pandas DataFrame, final distance to the target after applying perturbation p
     
     """
-    cti_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.csv.gz')
-    ctf_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.csv.gz')
+    cti_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{cti}_downsample.csv.gz',index_col=[0,1])
+    ctf_df = pd.read_csv(f'data/GeneExp/fig2_cell_line_data/{ctf}_downsample.csv.gz',index_col=[0,1])
     ctf_mu = ctf_df.mean()
     if len(p.index.names)<2:
         p.index.names=['GSM']
@@ -755,7 +755,7 @@ def plot_naive_v_opt_recovery(oneGN=False):
 def main():
     ## generate results for each constraint condition and number of genes
     t_i = time.time()
-    for ng in [1,-1]:
+    for ng in [-1,1]:
         for CH in ['A','I','E']:
             if not osp.exists(f'output/naive_v_opt/{CH}/'):
                 os.makedirs(f'output/naive_v_opt/{CH}/')
