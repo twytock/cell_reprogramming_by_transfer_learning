@@ -23,7 +23,7 @@ N2K_ser = K2N_ser.reset_index().set_index('0').iloc[:,0]
     
 
 def analyze_data():
-    L = glob(OUT+'*-*.pkl')
+    L = glob(osp.join(OUT,'*-*.pkl'))
     trans_stats_d = defaultdict(dict)
     trans_gnfreq_d = defaultdict(dict)
     for fn in L:
@@ -62,9 +62,9 @@ def analyze_data():
                 else:
                     trans_gnfreq_d[(gsmi,cti,ctf)][p_tup]=0
     opdf1 = pd.DataFrame(dict(trans_stats_d))
-    opdf1.to_pickle(OUT2+f'{CH}_stats_df.pkl')
+    opdf1.to_pickle(osp.join(OUT2,f'{CH}_stats_df.pkl'))
     opdf2 = pd.DataFrame(dict(trans_gnfreq_d))
-    opdf2.to_pickle(OUT2+f'{CH}_gnfreq_df.pkl')
+    opdf2.to_pickle(osp.join(OUT2,f'{CH}_gnfreq_df.pkl'))
     return opdf1,opdf2
 
 def gnfreq_analysis():
