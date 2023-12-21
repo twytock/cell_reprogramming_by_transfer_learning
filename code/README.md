@@ -72,15 +72,25 @@ This python script may also be invoked for individual cell types, for example:
 
 The command line arguments are the target cell type, the dataset, and the constraint condition, in that order.
 
-## `analyze_transitions_final.py`
+## `analyze_transitions.sh`
 
-This script gathers the results created by `fs.sh` and gathers them into single files. 
-It uses the same command line arguments as `fs.sh`.
+This shell script runs the file `analyze_transitions_final.py`,
+which gathers the results created by `fs.sh` and gathers them into single files.
+
+The script takes no command line arguments and may be invoked using
+
+`./code/analyze_transitions.sh`.
+
+The shell script will call `analyze_transitions_final.py` for both datasets and all three constraint cases.
+
+### `analyze_transitions_final.py`
+
+This script uses the same command line arguments as `fs.sh`.
 Continuing the example above, the script may be invoked using:
 
 `python code/analyze_transitions_final.py RNASeq E`
 
-The files `output/FS_RNASeq/E/*-*.pkl` would be agglomerated into two files:
+The files `output/FS_RNASeq/E/*-*.pkl` will be agglomerated into two files:
 
 1. `output/RNASeq/E_stats_df.pkl`, which contains a table of summary statistics of the transitions like the number of genes needed to transdifferentiate cells, and the fraction of the distance recovered.
 2. `output/RNASeq/E_gnfreq_df.pkl`, which contains a table of the control inputs used in each transdifferentiation instance.
@@ -92,7 +102,18 @@ These two files are further processed to take means over all cell type pairs, re
 3. `output/RNASeq/E_mean_stats_df.pkl`, which contains the average transition statistics for each cell type pair.
 
 
-## `make_network_figure_final.py`
+### `make_network_figure.sh`
+
+This script calls `make_network_figure_final.py` to produce the figures and graphML files associated with each dataset.
+
+The script takes no command line arguments and may be invoked using
+
+`./code/make_network_figure.sh`.
+
+The shell script will call `make_network_figure_final.py` for both datasets.
+
+
+### `make_network_figure_final.py`
 
 This script produces the panels of Fig. 4 of the main text. It also produces the graphml files that 
 may be used to create Figs. 5 and 6 of the main text and Figs. S3 and S4 of the SI.
@@ -100,9 +121,9 @@ In addition, this script produces Fig. 7.
 
 The script uses the output of `analyze_transitions_final.py` to create the figures. It has a single command line argument, the dataset:
 
-`python -m scoop -n 8 make_network_figure.py RNASeq`
+`python make_network_figure.py RNASeq`
 
-The computation of the exact $p$-values is expensive, so it is recommended to parallelize that computation.
+The computation of the exact $p$-values is expensive for the GeneExp dataset, so the shell script parallelizes that computation.
 
 The graphml files are output to the `output/Graphs` directory
 

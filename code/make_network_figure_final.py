@@ -134,13 +134,13 @@ def reprogramming_network(stats_df,nn_l,ff_l,dump=False):
         scale = np.array([1,6,12,18,24,30,36])
         if not osp.exists(osp.join(OUT,'fig4')):
             os.makedirs(osp.join(OUT,'fig4'))
-        opfn = osp.join(OUT,'fig4',f'{dmode}_transitions_landscape.svg'
+        opfn = osp.join(OUT,'fig4',f'{dmode}_transitions_landscape.svg')
     else:
         ax2 = fig.add_axes([.95,.1,.1,.85])
         scale = np.array([1,9,18,27,36,45,54])
         if not osp.exists(osp.join(OUT,'fig4')):
             os.makedirs(osp.join(OUT,'fig4'))
-        opfn = osp.join(OUT,'fig4',f'{dmode}_transitions_landscape.svg'
+        opfn = osp.join(OUT,'fig4',f'{dmode}_transitions_landscape.svg')
     ax2.scatter(np.zeros(7),np.arange(7),s=2*scale,
                marker='o',color='#7f7f7f')
     ax2.axis('off')
@@ -334,7 +334,8 @@ def calc_probs(max_gn_df,all_prob,other_freq_ser,useCols=True,NN=54):
             ct_d[(ct,gn,'binom')] = binom(NN,all_prob.loc[(gn,)]).logsf(val)
             probs = []
             for ser in other_freq_ser.values:
-                #ser.index=pd.MultiIndex.from_tuples(ser.index.tolist())
+                if dmode=='RNASeq':
+                    ser.index=pd.MultiIndex.from_tuples(ser.index.tolist())
                 prb = ser.loc[gn] if gn in ser.index else 0
                 probs.append(prb)
             probs = pd.Categorical(np.array(probs)).value_counts().sort_index(ascending=True)
@@ -377,6 +378,8 @@ def calc_gn_freqs(dmode):
         ctf_freq_d[ctf] = col.value_counts(normalize=True)
     ctf_freq_ser = pd.Series(ctf_freq_d)
     all_prob = max_gn_df.gn_max.value_counts(normalize=True)
+    if dmode=='RNASeq':
+        all_prob.index = pd.MultiIndex.from_tuples(all_prob.index.tolist())                        
     finct_d = calc_probs(max_gn_df,all_prob,cti_freq_ser,useCols=True,NN=NN)
     initct_d = calc_probs(max_gn_df,all_prob,ctf_freq_ser,useCols=False,NN=NN)
     init_pvals = 1-np.abs(2*np.exp(pd.Series(initct_d))-1)
@@ -434,9 +437,12 @@ def write_network(DF,DF2):
                 G.nodes[nd]['tissue_group']=str(mipheno.loc[nd,'NAME'])
                 G.nodes[nd]['color']=mipheno.loc[nd,'COLOR']
         elif nd in gn_list:
-            ND = nd.replace('_kd','-').replace('_oe','+')
-            if '_' in ND:
-                ND = ND.split('_',1)[1]
+            if dmode=='GeneExp':
+                ND = nd.replace('_kd','-').replace('_oe','+')
+                if '_' in ND:
+                    ND = ND.split('_',1)[1]
+            else:
+                ND = nd
             G.nodes[nd]['name']=str(ND)
             G.nodes[nd]['class']='gene'
     if not osp.exists(osp.join(OUT,'Graphs')):
