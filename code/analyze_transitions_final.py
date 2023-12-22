@@ -12,6 +12,7 @@ import pandas as pd
 from glob import glob
 import sys,os,os.path as osp
 from collections import defaultdict
+from copy import copy
 
 CH = sys.argv[2]
 dmode = sys.argv[1]
@@ -31,7 +32,8 @@ def analyze_data():
         res_df = res_df.set_index(['GSM_i','CTI','CTF','NG'])
         res_df_stat = res_df.loc[:,'D_F':'KNN_PRB']
         GB = res_df_stat.reset_index(level=3).groupby(level=[0,1,2])
-        for (gsmi,cti,ctf),grp in GB:
+        for (gsmi,cti,ctf),grpp in GB:
+            grp = grpp.sort_values('NG').iloc[:-1,:] if CH=='E' else grpp
             trans_stats_d[(gsmi,cti,ctf)]['P_F'] = grp.P_F.max() ## max pct
             trans_stats_d[(gsmi,cti,ctf)]['NG'] = grp.NG.max() ## number of genes
             trans_stats_d[(gsmi,cti,ctf)]['D_F'] = grp.D_F.min() ## closest dist
@@ -52,13 +54,23 @@ def analyze_data():
         res_df_alpha = res_df_alpha.T[nz_alpha>0].T
         GB2 = res_df_alpha.reset_index(level=3).groupby(level=[0,1,2])
         for (gsmi,cti,ctf),grp2 in GB2:
-            grp2 = grp2.set_index('NG').sort_index()
-            srt_inds = grp2.index.tolist()
-            for p_tup,col in grp2.items():
+            if CH!='E':
+                grpp = grp2.sort_values('NG').iloc[:-1,:]
+            else:
+                grpp = grp2.sort_values('NG')
+            if 'NG' in grpp.columns:
+                grpp = grpp.set_index('NG')
+            grpp = grpp if grpp.shape[0]>0 else grp2
+            srt_inds = grpp.index.tolist()
+            for p_tup,col in grpp.items():
                 if any(col>0):
                     minval = col[col>0].index.min()
                     IND = srt_inds.index(minval)
-                    trans_gnfreq_d[(gsmi,cti,ctf)][p_tup]=sum([1/ii for ii in srt_inds[IND:]])/col.shape[0]
+                    srt_inds_cpy = copy(srt_inds[IND:])
+                    SS = (grpp.loc[srt_inds_cpy[-1]]!=0).sum()
+                    if not SS == srt_inds_cpy[-1]:
+                        srt_inds_cpy[-1]=SS
+                    trans_gnfreq_d[(gsmi,cti,ctf)][p_tup]=sum([1/ii for ii in srt_inds_cpy[IND:]])/col.shape[0]
                 else:
                     trans_gnfreq_d[(gsmi,cti,ctf)][p_tup]=0
     opdf1 = pd.DataFrame(dict(trans_stats_d))

@@ -451,7 +451,7 @@ def forward_selection(S,T,sel_cols,deltas,model,WT,targ_basin,IM=False):
         if not osp.exists(tmpdir):
             os.mkdir(tmpdir)
         DF.to_pickle(osp.join(tmpdir,f'{S.index[0]}-{CH}.pkl'))
-    return S.index[0],DF
+    return S.index[0],DF.sort_values('NG')
 
 
 def pandas_FS(cti,cti_df,targ):
@@ -554,11 +554,11 @@ def fix_indices(data):
         MI = pd.MultiIndex.from_tuples(zip(data.columns,SMTSD))    
         data.columns = MI
     else:
-        ANNOT = pd.read_csv(f'{IN}/{dmode}/GSM_to_CellType_final.csv', index_col=0)
-        VCS = ANNOT.CT.value_counts()
+        ANNOT = pd.read_csv(f'{IN}/{dmode}/GSM_to_CellType_final.csv', index_col='GSM').iloc[:,-1]
+        VCS = ANNOT.value_counts()
         CT = VCS[VCS>37].index.tolist()
         gsm_ct_l = []
-        for gsm,ct in ANNOT.CT.items():
+        for gsm,ct in ANNOT.items():
             ctp = ct if ct in CT else 'Other'
             gsm_ct_l.append((gsm,ctp))
         MI = pd.MultiIndex.from_tuples(gsm_ct_l)
