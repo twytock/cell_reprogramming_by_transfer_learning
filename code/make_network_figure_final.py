@@ -169,14 +169,17 @@ def canc_trends(stats_df,ch):
         ng_counts_d[kw].extend(grp.NG.values.tolist())
     ng_counts_d = dict(ng_counts_d)
     percentage_d = {}
+    percentage_d = {}
     for k,v in ng_counts_d.items():
-        VCS = pd.Categorical(v).value_counts()
-        VCS /= VCS.sum()
-        SEL = VCS.iloc[:4].copy()
-        SEL.index = [str(ind) for ind in SEL.index.tolist()]
-        SEL['5+']=1-SEL.sum()
-        
-        percentage_d[k] = SEL
+        VCS = pd.Series(v).fillna(210).astype(int).value_counts(normalize=True).sort_index()
+        num_intersect = VCS.index.intersection(range(1,5))
+        SEL = {}
+        SS = 0
+        for num in num_intersect:
+            SS+=VCS.loc[num]
+            SEL[str(num)]=VCS.loc[num]
+        SEL['5+'] = 1-SS        
+        percentage_d[k] = pd.Series(SEL)
     perc_df = pd.DataFrame(percentage_d)
     perc_df.to_pickle(osp.join(OUT,dmode,f'{ch}_pct_df.pkl'))
     return

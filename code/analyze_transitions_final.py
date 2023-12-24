@@ -33,7 +33,8 @@ def analyze_data():
         res_df_stat = res_df.loc[:,'D_F':'KNN_PRB']
         GB = res_df_stat.reset_index(level=3).groupby(level=[0,1,2])
         for (gsmi,cti,ctf),grpp in GB:
-            grp = grpp.sort_values('NG').iloc[:-1,:] if CH=='E' else grpp
+            NG_MAX = TMP1.set_index(['GSM_i','CTI','CTF','NG']).index.get_level_values(-1).max()
+            grp = grpp.sort_values('NG').iloc[:-1,:] if NG_MAX>=(grpp.shape[1]-4) else grpp.sort_values('NG')
             trans_stats_d[(gsmi,cti,ctf)]['P_F'] = grp.P_F.max() ## max pct
             trans_stats_d[(gsmi,cti,ctf)]['NG'] = grp.NG.max() ## number of genes
             trans_stats_d[(gsmi,cti,ctf)]['D_F'] = grp.D_F.min() ## closest dist
